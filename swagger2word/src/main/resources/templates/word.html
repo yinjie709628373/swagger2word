@@ -78,9 +78,39 @@
 
 <body>
 <div style="width:800px; margin: 0 auto"  id="all" >
+    <table border="1" cellspacing="0">
+        <tr class="bg" align="center">
+            <td>状态码</td>
+            <td>描述</td>
+            <td colspan="3">说明</td>
+        </tr>
+
+        <tr class="bg" align="center">
+            <td>200</td>
+            <td>ok</td>
+            <td colspan="3">请求成功</td>
+        </tr>
+
+        <tr class="bg" align="center">
+            <td>401</td>
+            <td>Unauthorized</td>
+            <td colspan="3">Unauthorized</td>
+        </tr>
+
+        <tr class="bg" align="center">
+            <td>403</td>
+            <td>Forbidden</td>
+            <td colspan="3">Forbidden</td>
+        </tr>
+        <tr class="bg" align="center">
+            <td>404</td>
+            <td>NotFound</td>
+            <td colspan="3">NotFound</td>
+        </tr>
+    </table>
     <div th:each="table:${tables}" >
         <!--这个是类的说明-->
-        <h4 th:text="${table.title}"></h4>
+        <h4 th:text="${table.description}"></h4>
         <!--这个是每个请求的说明，方便生成文档后进行整理-->
         <h5 th:text="${table.tag}"></h5>
         <table border="1" cellspacing="0" cellpadding="0" width="100%">
@@ -125,11 +155,6 @@
                 <td th:text="${request.remark}"></td>
             </tr>
 
-            <tr class="bg" align="center">
-                <td>状态码</td>
-                <td>描述</td>
-                <td colspan="3">说明</td>
-            </tr>
 
             <tr align="center" th:each="response:${table.responseList}">
                 <td th:text="${response.name}"></td>
