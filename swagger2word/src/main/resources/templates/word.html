@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="application/msword"/>
+    <title>toWord</title>
+    <style type="text/css">
+        .bg {
+            background-color: rgb(84, 127, 177);
+        }
+
+        tr {
+            height: 20px;
+            font-size: 12px;
+        }
+
+        .specialHeight {
+            height: 40px;
+        }
+    </style>
+    <script type="text/javascript" language="javascript">
+
+
+
+      function exportToWord() {
+
+        var control = document.getElementById("all");
+
+        try {
+
+          var oWD = new ActiveXObject("Word.Application");
+
+          var oDC = oWD.Documents.Add("", 0, 1);
+
+          var oRange = oDC.Range(0, 1);
+
+          var sel = document.body.createTextRange();
+
+          try {
+
+            sel.moveToElementText(control);
+
+          } catch (notE) {
+
+            alert("导出数据失败，没有数据可以导出。");
+
+            window.close();
+
+            return;
+
+          }
+
+          sel.select();
+
+          sel.execCommand("Copy");
+
+          oRange.Paste();
+
+          oWD.Application.Visible = true;
+
+          //window.close();
+
+        }
+
+        catch (e) {
+
+          alert("导出数据失败，需要在客户机器安装Microsoft Office Word(不限版本)，将当前站点加入信任站点，允许在IE中运行ActiveX控件。");
+
+          try { oWD.Quit(); } catch (ex) { }
+
+          //window.close();
+
+        }
+
+      }
+
+    </script>
+</head>
+
+<body>
+<div style="width:800px; margin: 0 auto"  id="all" >
+    <div th:each="table:${tables}" >
+        <!--这个是类的说明-->
+        <h4 th:text="${table.title}"></h4>
+        <!--这个是每个请求的说明，方便生成文档后进行整理-->
+        <h5 th:text="${table.tag}"></h5>
+        <table border="1" cellspacing="0" cellpadding="0" width="100%">
+            <tr class="bg">
+                <td colspan="5" th:text="${table.tag}"></td>
+            </tr>
+            <tr>
+                <td>接口描述</td>
+                <td colspan="4" th:text="${table.description}"></td>
+            </tr>
+            <tr>
+                <td>URL</td>
+                <td colspan="4" th:text="${table.url}"></td>
+            </tr>
+            <tr>
+                <td>请求方式</td>
+                <td colspan="4" th:text="${table.requestType}"></td>
+            </tr>
+            <tr>
+                <td>请求类型</td>
+                <td colspan="4" th:text="${table.requestForm}"></td>
+            </tr>
+            <tr>
+                <td>返回类型</td>
+                <td colspan="4" th:text="${table.responseForm}"></td>
+            </tr>
+
+            <tr class="bg" align="center">
+                <td>参数名</td>
+                <td>数据类型</td>
+                <td>参数类型</td>
+                <td>是否必填</td>
+                <td>说明</td>
+            </tr>
+
+            <tr align="center" th:each="request:${table.requestList}">
+                <td th:text="${request.name}"></td>
+                <td th:text="${request.type}"></td>
+                <td th:text="${request.paramType}"></td>
+                <td th:if="${request.require}" th:text="Y"></td>
+                <td th:if="${!request.require}" th:text="N"></td>
+                <td th:text="${request.remark}"></td>
+            </tr>
+
+            <tr class="bg" align="center">
+                <td>状态码</td>
+                <td>描述</td>
+                <td colspan="3">说明</td>
+            </tr>
+
+            <tr align="center" th:each="response:${table.responseList}">
+                <td th:text="${response.name}"></td>
+                <td th:text="${response.description}"></td>
+                <td colspan="3" th:text="${response.remark}"></td>
+            </tr>
+
+            <tr class="bg">
+                <td colspan="5">示例</td>
+            </tr>
+            <tr class="specialHeight">
+                <td class="bg">请求参数</td>
+                <td colspan="4" th:text="${table.requestParam}"></td>
+            </tr>
+            <tr class="specialHeight">
+                <td class="bg">返回值</td>
+                <td colspan="4" th:text="${table.responseParam}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<button  onclick="exportToWord()">生成</button>
+</body>
+</html>
